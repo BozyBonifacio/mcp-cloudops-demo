@@ -158,7 +158,7 @@ mcp-cloudops-demo/
 Clone the repository and create a virtual environment:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/mcp-cloudops-demo.git
+git clone https://github.com/BozyBonifacio/mcp-cloudops-demo.git
 cd mcp-cloudops-demo
 python -m venv .venv
 ```
@@ -191,6 +191,29 @@ mcp-cloudops-demo
 
 The process will wait for an MCP client to communicate over stdin/stdout. That is expected.
 
+## Detailed Windows run guide
+
+From PowerShell:
+
+```powershell
+git clone https://github.com/BozyBonifacio/mcp-cloudops-demo.git
+cd mcp-cloudops-demo
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+mcp-cloudops-demo
+```
+
+If PowerShell blocks virtual-environment activation, allow scripts for the current terminal session only:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+When `mcp-cloudops-demo` starts and appears to sit idle, that is expected. This demo uses MCP over **stdio** and waits for an MCP client rather than opening a web page. Press `Ctrl+C` to stop it.
+
 ## Test with MCP Inspector
 
 The official Python MCP SDK includes development tooling when installed with the CLI extra.
@@ -207,6 +230,87 @@ If `mcp` is not installed as a CLI command, install the SDK CLI extra:
 
 ```bash
 python -m pip install 'mcp[cli]'
+```
+
+## Recommended MCP Inspector walkthrough
+
+After starting Inspector, use this sequence to demonstrate how multiple MCP capabilities contribute to one investigation:
+
+1. Call `list_servers` with `environment = prod`.
+2. Call `get_server_health` with `server_name = api-prod-02`.
+3. Call `get_open_incidents` and investigate `payments-api`.
+4. Call `get_recent_deployments` for `payments-api`.
+5. Call `search_logs` for the affected service/server and inspect ERROR events.
+
+```text
+list_servers("prod")
+        |
+        v
+get_server_health("api-prod-02")
+        |
+        v
+get_open_incidents("payments-api")
+        |
+        v
+get_recent_deployments(service="payments-api")
+        |
+        v
+search_logs(service="payments-api")
+        |
+        v
+AI correlates the evidence
+```
+
+### Recommended live-demo prompt
+
+> Investigate the open incident affecting payments-api. Determine which server is affected, its health state, whether a recent deployment correlates with the incident, what the logs show, and the most likely cause.
+
+The key point to explain is that the MCP server advertises standardized capabilities that an MCP-compatible host can discover and combine instead of relying on one hard-coded chatbot workflow.
+
+## Windows MCP client configuration
+
+When using a virtual environment on Windows, prefer the absolute path to its Python executable. For example, if the repository is at `C:\github\mcp-cloudops-demo`:
+
+```json
+{
+  "mcpServers": {
+    "cloudops-demo": {
+      "command": "C:\\github\\mcp-cloudops-demo\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "mcp_cloudops.server"]
+    }
+  }
+}
+```
+
+Replace the example path with your actual clone location. This avoids accidentally launching a different Python installation that does not contain the project dependencies.
+
+## Troubleshooting
+
+If `mcp-cloudops-demo` is not recognized, activate `.venv` and reinstall the project:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e ".[dev]"
+```
+
+You can also try:
+
+```bash
+python -m mcp_cloudops.server
+```
+
+If `mcp` is not recognized:
+
+```bash
+python -m pip install "mcp[cli]"
+mcp dev src/mcp_cloudops/server.py
+```
+
+If you get `ModuleNotFoundError: mcp_cloudops`, make sure you are in the repository root, reinstall the editable package, and verify the import:
+
+```bash
+python -m pip install -e ".[dev]"
+python -c "import mcp_cloudops; print('mcp_cloudops import OK')"
 ```
 
 ## Run tests
