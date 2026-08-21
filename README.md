@@ -134,6 +134,13 @@ mcp-cloudops-demo/
 │       │   └── cloudops.py
 │       ├── tools/
 │       │   └── cloudops.py
+│       ├── web/
+│       │   ├── app.py
+│       │   ├── scenario.py
+│       │   └── static/
+│       │       ├── index.html
+│       │       ├── styles.css
+│       │       └── app.js
 │       ├── server.py
 │       └── store.py
 ├── tests/
@@ -213,6 +220,80 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 When `mcp-cloudops-demo` starts and appears to sit idle, that is expected. This demo uses MCP over **stdio** and waits for an MCP client rather than opening a web page. Press `Ctrl+C` to stop it.
+
+## Browser-based portfolio demo
+
+The easiest way to demonstrate the project is now the built-in browser UI. It requires **no paid LLM API key** and acts as a real MCP client: the FastAPI backend starts the local MCP server over stdio, discovers its capabilities, calls MCP tools, and returns the evidence to the browser.
+
+Start it after installing the project:
+
+```bash
+mcp-cloudops-web
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
+
+The page includes:
+
+- an operator-style chat interface;
+- suggested CloudOps investigation prompts;
+- runtime MCP capability discovery;
+- an **MCP trace** showing each tool call and its arguments;
+- a deterministic incident-investigation workflow that requires no external AI service;
+- the existing safety behavior for the simulated restart.
+
+A recommended first prompt is:
+
+> Investigate the open incident affecting payments-api and tell me the likely cause.
+
+The browser backend will use MCP to call multiple tools such as `get_open_incidents`, `list_servers`, `get_recent_deployments`, and `search_logs`, then display both the conclusion and the MCP call trace.
+
+> **Why deterministic chat?** The browser demo intentionally does not require OpenAI, Azure OpenAI, Anthropic, or another paid model API. A small intent router recognizes the included demo scenarios while MCP remains responsible for capability discovery and tool execution. You can later replace the router with an LLM without changing the MCP server contract.
+
+### Browser demo architecture
+
+```text
+Browser
+   |
+   | HTTP /api/chat
+   v
+FastAPI browser backend
+   |
+   | MCP over stdio
+   v
+MCP CloudOps Server
+   |
+   +--> Tools
+   +--> Resources
+   +--> Prompts
+   |
+   v
+Fake Azure-style JSON data
+```
+
+### Browser demo with Docker
+
+Build and start the container:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
+
+Stop it with `Ctrl+C`, then optionally remove the container with:
+
+```bash
+docker compose down
+```
 
 ## Test with MCP Inspector
 
@@ -327,22 +408,25 @@ ruff check src tests
 
 ## Run with Docker
 
-Build the image:
+The Docker image now starts the browser UI by default.
 
 ```bash
 docker build -t mcp-cloudops-demo .
+docker run --rm -p 8000:8000 mcp-cloudops-demo
 ```
 
-Run it interactively because stdio is the MCP transport used by this demo:
+Open `http://localhost:8000`.
+
+Or use Docker Compose:
 
 ```bash
-docker run --rm -i mcp-cloudops-demo
+docker compose up --build
 ```
 
-Or with Docker Compose:
+To run the original stdio MCP server inside the image instead:
 
 ```bash
-docker compose run --rm mcp-cloudops-demo
+docker run --rm -i --entrypoint mcp-cloudops-demo mcp-cloudops-demo
 ```
 
 ## Example client configuration

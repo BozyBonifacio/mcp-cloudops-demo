@@ -5,4 +5,5 @@ COPY pyproject.toml README.md ./
 COPY src ./src
 RUN pip install --no-cache-dir .
 
-ENTRYPOINT ["mcp-cloudops-demo"]
+EXPOSE 8000
+CMD ["mcp-cloudops-web"]
