@@ -25,6 +25,9 @@ dev = [
 [project.scripts]
 mcp-cloudops-demo = "mcp_cloudops.server:main"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_cloudops"]
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 addopts = "-q"
