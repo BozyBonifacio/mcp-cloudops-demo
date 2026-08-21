@@ -1,0 +1,23 @@
+[
+  {
+    "service": "payments-api",
+    "server": "api-prod-02",
+    "severity": "ERROR",
+    "timestamp": "2026-08-21T10:05:12Z",
+    "message": "Request queue depth exceeded threshold: 1200"
+  },
+  {
+    "service": "payments-api",
+    "server": "api-prod-02",
+    "severity": "WARN",
+    "timestamp": "2026-08-21T10:04:47Z",
+    "message": "CPU above 90% for 5 minutes"
+  },
+  {
+    "service": "invoice-worker",
+    "server": "worker-stg-01",
+    "severity": "ERROR",
+    "timestamp": "2026-08-20T14:11:08Z",
+    "message": "Startup probe failed after deployment dep-178"
+  }
+]

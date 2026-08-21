@@ -1,0 +1,32 @@
+[
+  {
+    "name": "api-prod-01",
+    "resource_group": "rg-demo-prod-uks",
+    "region": "UK South",
+    "environment": "prod",
+    "status": "healthy",
+    "cpu_percent": 31,
+    "memory_percent": 58,
+    "service": "payments-api"
+  },
+  {
+    "name": "api-prod-02",
+    "resource_group": "rg-demo-prod-uks",
+    "region": "UK South",
+    "environment": "prod",
+    "status": "degraded",
+    "cpu_percent": 94,
+    "memory_percent": 87,
+    "service": "payments-api"
+  },
+  {
+    "name": "worker-stg-01",
+    "resource_group": "rg-demo-stg-uks",
+    "region": "UK South",
+    "environment": "stg",
+    "status": "healthy",
+    "cpu_percent": 44,
+    "memory_percent": 49,
+    "service": "invoice-worker"
+  }
+]

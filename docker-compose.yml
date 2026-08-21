@@ -1,0 +1,5 @@
+services:
+  mcp-cloudops-demo:
+    build: .
+    stdin_open: true
+    tty: true

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "dep-182",
+    "service": "payments-api",
+    "server": "api-prod-02",
+    "version": "2.7.1",
+    "status": "successful",
+    "deployed_at": "2026-08-21T09:32:00Z",
+    "commit": "7f3ac11"
+  },
+  {
+    "id": "dep-181",
+    "service": "payments-api",
+    "server": "api-prod-01",
+    "version": "2.7.1",
+    "status": "successful",
+    "deployed_at": "2026-08-21T09:30:00Z",
+    "commit": "7f3ac11"
+  },
+  {
+    "id": "dep-178",
+    "service": "invoice-worker",
+    "server": "worker-stg-01",
+    "version": "1.8.4",
+    "status": "failed",
+    "deployed_at": "2026-08-20T14:10:00Z",
+    "commit": "a102db9"
+  }
+]

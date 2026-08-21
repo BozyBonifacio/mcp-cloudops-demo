@@ -1,0 +1,18 @@
+[
+  {
+    "id": "INC-1042",
+    "severity": "SEV-2",
+    "status": "open",
+    "service": "payments-api",
+    "summary": "Elevated latency on one production API node",
+    "started_at": "2026-08-21T10:04:00Z"
+  },
+  {
+    "id": "INC-1038",
+    "severity": "SEV-3",
+    "status": "resolved",
+    "service": "invoice-worker",
+    "summary": "Deployment rollback after startup probe failure",
+    "started_at": "2026-08-20T14:12:00Z"
+  }
+]
