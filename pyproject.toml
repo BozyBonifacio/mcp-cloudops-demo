@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mcp-cloudops-demo"
-version = "0.1.0"
+version = "0.2.0"
 description = "A free, public demo MCP server for CloudOps scenarios using fake Azure-style infrastructure data."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,6 +13,8 @@ authors = [{name = "Bozy"}]
 dependencies = [
   "mcp>=1.2.0",
   "pydantic>=2.8.0",
+  "fastapi>=0.115.0",
+  "uvicorn>=0.30.0",
 ]
 
 [project.optional-dependencies]
@@ -24,9 +26,7 @@ dev = [
 
 [project.scripts]
 mcp-cloudops-demo = "mcp_cloudops.server:main"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/mcp_cloudops"]
+mcp-cloudops-web = "mcp_cloudops.web.app:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
@@ -34,3 +34,6 @@ addopts = "-q"
 
 [tool.ruff]
 line-length = 100
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_cloudops"]

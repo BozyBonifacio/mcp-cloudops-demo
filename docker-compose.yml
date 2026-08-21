@@ -1,5 +1,5 @@
 services:
   mcp-cloudops-demo:
     build: .
-    stdin_open: true
-    tty: true
+    ports:
+      - "8000:8000"
