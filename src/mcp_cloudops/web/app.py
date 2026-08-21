@@ -3,8 +3,9 @@ from __future__ import annotations
 import json
 import sys
 from contextlib import asynccontextmanager
+from collections.abc import AsyncIterator
 from pathlib import Path
-from typing import Any, AsyncIterator
+from typing import Any
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
@@ -64,10 +65,11 @@ async def mcp_session() -> AsyncIterator[ClientSession]:
         command=sys.executable,
         args=["-m", "mcp_cloudops.server"],
     )
-    async with stdio_client(params) as (read_stream, write_stream):
-        async with ClientSession(read_stream, write_stream) as session:
-            await session.initialize()
-            yield session
+    async with stdio_client(params) as (read_stream, write_stream), ClientSession(
+        read_stream, write_stream
+    ) as session:
+        await session.initialize()
+        yield session
 
 
 async def _call(
@@ -130,12 +132,16 @@ def _format_incident_answer(
         lines.extend(
             [
                 "",
-                "Likely cause: the evidence points to resource saturation on api-prod-02 after the "
-                "2.7.1 deployment. The deployment itself completed successfully, but the incident "
-                "began shortly afterwards and the node reports CPU above 90% plus excessive request queue depth.",
+                (
+                    "Likely cause: the evidence points to resource saturation on api-prod-02 after the "
+                    "2.7.1 deployment. The deployment itself completed successfully, but the incident "
+                    "began shortly afterwards and the node reports CPU above 90% plus excessive request queue depth."
+                ),
                 "",
-                "Safe next steps: compare api-prod-01 vs api-prod-02, inspect workload/request distribution, "
-                "review changes in commit 7f3ac11, and validate capacity before considering the simulated restart action.",
+                (
+                    "Safe next steps: compare api-prod-01 vs api-prod-02, inspect workload/request distribution, "
+                    "review changes in commit 7f3ac11, and validate capacity before considering the simulated restart action."
+                ),
             ]
         )
 
